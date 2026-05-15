@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: shaj-dev-postgres
+    environment:
+      POSTGRES_DB: shaj_ecom
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - dev_postgres_data:/var/lib/postgresql/data
+    networks:
+      - shaj-dev-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: shaj-dev-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - shaj-dev-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: shaj-dev-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - shaj-dev-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: shaj-dev-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@shaj.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - shaj-dev-network
+
+volumes:
+  dev_postgres_data:
+
+networks:
+  shaj-dev-network:
+    driver: bridge

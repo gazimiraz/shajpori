@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/shaj/ecom-shaj/**)",
+      "Read(//d/shaj/ecom-shaj/apps/web/src/app/\\(shop\\)/account/orders/**)",
+      "Read(//d/shaj/ecom-shaj/apps/web/src/app/\\(shop\\)/products/**)"
+    ]
+  }
+}

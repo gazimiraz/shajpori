@@ -1,0 +1,38 @@
+{
+  "name": "shaj-ecom",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise-grade fashion & lifestyle eCommerce ecosystem",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean && rimraf node_modules",
+    "db:generate": "pnpm --filter @shaj/database run generate",
+    "db:migrate": "pnpm --filter @shaj/database run migrate",
+    "db:seed": "pnpm --filter @shaj/database run seed",
+    "db:studio": "pnpm --filter @shaj/database run studio",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "turbo": "^2.0.9",
+    "typescript": "^5.5.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,yml,yaml}": ["prettier --write"]
+  },
+  "packageManager": "pnpm@9.4.0"
+}

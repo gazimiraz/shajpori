@@ -1,0 +1,40 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+RUN npm install -g pnpm@9
+
+WORKDIR /app
+
+COPY package.json pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/
+COPY packages/database/package.json ./packages/database/
+COPY packages/types/package.json ./packages/types/
+COPY packages/utils/package.json ./packages/utils/
+
+RUN pnpm install --frozen-lockfile
+
+COPY packages/ ./packages/
+COPY apps/api/ ./apps/api/
+COPY turbo.json tsconfig.json ./
+
+RUN pnpm --filter @shaj/database run generate
+RUN pnpm --filter @shaj/api run build
+
+# Production stage
+FROM node:20-alpine AS runner
+
+RUN npm install -g pnpm@9
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/dist ./dist
+COPY --from=builder /app/apps/api/package.json ./
+COPY --from=builder /app/packages/database/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/packages/database/prisma ./prisma
+
+RUN mkdir -p uploads
+
+ENV NODE_ENV=production
+EXPOSE 4000
+
+CMD ["node", "dist/main"]

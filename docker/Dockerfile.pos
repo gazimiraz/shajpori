@@ -1,0 +1,22 @@
+FROM node:20-alpine AS builder
+RUN npm install -g pnpm@9
+WORKDIR /app
+COPY package.json pnpm-workspace.yaml ./
+COPY apps/pos/package.json ./apps/pos/
+COPY packages/types/package.json ./packages/types/
+COPY packages/utils/package.json ./packages/utils/
+RUN pnpm install --frozen-lockfile
+COPY packages/ ./packages/
+COPY apps/pos/ ./apps/pos/
+COPY turbo.json tsconfig.json ./
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN pnpm --filter @shaj/pos run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3002
+COPY --from=builder /app/apps/pos/.next/standalone ./
+COPY --from=builder /app/apps/pos/.next/static ./apps/pos/.next/static
+COPY --from=builder /app/apps/pos/public ./apps/pos/public
+EXPOSE 3002
+CMD ["node", "apps/pos/server.js"]
