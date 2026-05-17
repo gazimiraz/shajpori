@@ -19,7 +19,11 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@shaj/types": ["../../packages/types/src/index.ts"],
+      "@shaj/types/*": ["../../packages/types/src/*"],
+      "@shaj/utils": ["../../packages/utils/src/index.ts"],
+      "@shaj/utils/*": ["../../packages/utils/src/*"]
     },
     "plugins": [
       {
