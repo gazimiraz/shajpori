@@ -17,7 +17,10 @@ PNPM="$(npm config get prefix)/bin/pnpm"
 echo "pnpm path: $PNPM"
 echo "pnpm version: $($PNPM --version)"
 
-# Install dependencies
+# Remove npm-created node_modules to avoid conflicts with pnpm
+rm -rf node_modules
+
+# Install all workspace dependencies with pnpm
 $PNPM install --no-frozen-lockfile
 
 # Generate Prisma client
