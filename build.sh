@@ -1,26 +1,22 @@
 #!/bin/bash
-# Hostinger build script - bypasses corepack
+# Hostinger build script
 set -e
 
 echo "Node version: $(node --version)"
 echo "NPM version: $(npm --version)"
 
-# Disable corepack so it doesn't intercept pnpm calls
-corepack disable 2>/dev/null || true
-export COREPACK_ENABLE_STRICT=0
-
-# Install pnpm 8.x via npm (compatible with Node 20)
+# Install pnpm to user home (avoids read-only system path)
+export npm_config_prefix="$HOME/.npm-global"
+mkdir -p "$HOME/.npm-global/bin"
 npm install -g pnpm@8.15.4
 
-# Use direct path to bypass any corepack shim
-PNPM="$(npm config get prefix)/bin/pnpm"
-echo "pnpm path: $PNPM"
+PNPM="$HOME/.npm-global/bin/pnpm"
 echo "pnpm version: $($PNPM --version)"
 
-# Remove npm-created node_modules to avoid conflicts with pnpm
+# Remove npm-created node_modules to avoid conflicts
 rm -rf node_modules
 
-# Install all workspace dependencies with pnpm
+# Install all workspace dependencies
 $PNPM install --no-frozen-lockfile
 
 # Generate Prisma client
