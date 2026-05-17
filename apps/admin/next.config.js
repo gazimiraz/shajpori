@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['@shaj/types', '@shaj/utils'],
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
   },
