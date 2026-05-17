@@ -17,8 +17,15 @@ echo "pnpm version: $($PNPM --version)"
 rm -rf node_modules
 
 # Install ALL dependencies including devDependencies (prisma CLI, etc.)
-# NODE_ENV=production skips devDeps - we need devDeps for the build
 NODE_ENV=development $PNPM install --no-frozen-lockfile
+
+# Push schema to Neon database (creates all tables)
+if [ -n "$DATABASE_URL" ]; then
+  echo "Pushing schema to database..."
+  $PNPM --filter @shaj/database run push
+else
+  echo "WARNING: DATABASE_URL not set, skipping db push"
+fi
 
 # Generate Prisma client
 $PNPM --filter @shaj/database run generate
