@@ -19,6 +19,11 @@ rm -rf node_modules
 # Install ALL dependencies including devDependencies (prisma CLI, etc.)
 NODE_ENV=development $PNPM install --no-frozen-lockfile
 
+# Fix permissions on Prisma engine binaries
+find node_modules/.pnpm -name "schema-engine-*" -type f -exec chmod +x {} \; 2>/dev/null || true
+find node_modules/.pnpm -name "query-engine-*" -type f -exec chmod +x {} \; 2>/dev/null || true
+find node_modules/.pnpm -name "migration-engine-*" -type f -exec chmod +x {} \; 2>/dev/null || true
+
 # Push schema to Neon database (creates all tables)
 if [ -n "$DATABASE_URL" ]; then
   echo "Pushing schema to database..."
