@@ -14,15 +14,16 @@ const adminHandle = adminApp.getRequestHandler();
 Promise.all([webApp.prepare(), adminApp.prepare()]).then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
-    const host = (req.headers.host || '').split(':')[0];
+    const pathname = parsedUrl.pathname || '';
 
-    if (host === 'admin.gazimiraz.com' || host.startsWith('admin.')) {
+    // Route /admin/* to admin app (basePath handles the prefix)
+    if (pathname === '/admin' || pathname.startsWith('/admin/')) {
       adminHandle(req, res, parsedUrl);
     } else {
       webHandle(req, res, parsedUrl);
     }
   }).listen(port, () => {
-    console.log(`> Web:   gazimiraz.com -> port ${port}`);
-    console.log(`> Admin: admin.gazimiraz.com -> port ${port}`);
+    console.log(`> Web:   gazimiraz.com`);
+    console.log(`> Admin: gazimiraz.com/admin`);
   });
 });

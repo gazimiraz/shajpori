@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/admin',
   transpilePackages: ['@shaj/types', '@shaj/utils'],
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
