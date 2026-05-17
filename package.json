@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "bash build.sh",
+    "build:admin": "bash build-admin.sh",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
