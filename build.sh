@@ -1,22 +1,29 @@
 #!/bin/bash
-# Hostinger build script for Next.js monorepo
+# Hostinger build script - bypasses corepack
 set -e
 
 echo "Node version: $(node --version)"
 echo "NPM version: $(npm --version)"
 
-# Install pnpm compatible with current Node version
+# Disable corepack so it doesn't intercept pnpm calls
+corepack disable 2>/dev/null || true
+export COREPACK_ENABLE_STRICT=0
+
+# Install pnpm 8.x via npm (compatible with Node 20)
 npm install -g pnpm@8.15.4
 
-echo "pnpm version: $(pnpm --version)"
+# Use direct path to bypass any corepack shim
+PNPM="$(npm config get prefix)/bin/pnpm"
+echo "pnpm path: $PNPM"
+echo "pnpm version: $($PNPM --version)"
 
-# Install dependencies (skip lockfile check for CI)
-pnpm install --no-frozen-lockfile
+# Install dependencies
+$PNPM install --no-frozen-lockfile
 
 # Generate Prisma client
-pnpm --filter @shaj/database run generate
+$PNPM --filter @shaj/database run generate
 
 # Build web app only
-pnpm --filter @shaj/web build
+$PNPM --filter @shaj/web build
 
 echo "Build complete!"
