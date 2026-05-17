@@ -5,7 +5,7 @@
   "description": "Enterprise-grade fashion & lifestyle eCommerce ecosystem",
   "engines": {
     "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
+    "pnpm": ">=8.0.0"
   },
   "scripts": {
     "build": "turbo run build",
@@ -18,8 +18,7 @@
     "db:migrate": "pnpm --filter @shaj/database run migrate",
     "db:seed": "pnpm --filter @shaj/database run seed",
     "db:studio": "pnpm --filter @shaj/database run studio",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "prepare": "husky install"
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
