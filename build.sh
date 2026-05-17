@@ -16,13 +16,14 @@ echo "pnpm version: $($PNPM --version)"
 # Remove npm-created node_modules to avoid conflicts
 rm -rf node_modules
 
-# Install all workspace dependencies
-$PNPM install --no-frozen-lockfile
+# Install ALL dependencies including devDependencies (prisma CLI, etc.)
+# NODE_ENV=production skips devDeps - we need devDeps for the build
+NODE_ENV=development $PNPM install --no-frozen-lockfile
 
 # Generate Prisma client
 $PNPM --filter @shaj/database run generate
 
 # Build web app only
-$PNPM --filter @shaj/web build
+NODE_ENV=production $PNPM --filter @shaj/web build
 
 echo "Build complete!"
