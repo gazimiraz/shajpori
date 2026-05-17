@@ -33,6 +33,5 @@
   "lint-staged": {
     "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
     "*.{json,md,yml,yaml}": ["prettier --write"]
-  },
-  "packageManager": "pnpm@8.15.4"
+  }
 }
