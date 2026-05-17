@@ -1,5 +1,5 @@
 #!/bin/bash
-# Hostinger build script
+# Hostinger build script - builds web + admin
 set -e
 
 echo "Node version: $(node --version)"
@@ -16,26 +16,28 @@ echo "pnpm version: $($PNPM --version)"
 # Remove npm-created node_modules to avoid conflicts
 rm -rf node_modules
 
-# Install ALL dependencies including devDependencies (prisma CLI, etc.)
+# Install ALL dependencies including devDependencies
 NODE_ENV=development $PNPM install --no-frozen-lockfile
 
 # Fix permissions on Prisma engine binaries
 find node_modules/.pnpm -name "schema-engine-*" -type f -exec chmod +x {} \; 2>/dev/null || true
 find node_modules/.pnpm -name "query-engine-*" -type f -exec chmod +x {} \; 2>/dev/null || true
-find node_modules/.pnpm -name "migration-engine-*" -type f -exec chmod +x {} \; 2>/dev/null || true
 
 # Push schema to Neon database (creates all tables)
 if [ -n "$DATABASE_URL" ]; then
   echo "Pushing schema to database..."
   $PNPM --filter @shaj/database run push
-else
-  echo "WARNING: DATABASE_URL not set, skipping db push"
 fi
 
 # Generate Prisma client
 $PNPM --filter @shaj/database run generate
 
-# Build web app only
+# Build web app
+echo "Building web app..."
 NODE_ENV=production $PNPM --filter @shaj/web build
+
+# Build admin app
+echo "Building admin app..."
+NODE_ENV=production $PNPM --filter @shaj/admin build
 
 echo "Build complete!"
