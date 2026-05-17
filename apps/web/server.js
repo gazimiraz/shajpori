@@ -28,7 +28,7 @@ webApp.prepare().then(() => {
     const parsedUrl = parse(req.url, true);
     const pathname = parsedUrl.pathname || '';
 
-    if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    if (pathname === '/admin' || pathname === '/admin/' || pathname.startsWith('/admin/')) {
       getAdminHandle()
         .then(handle => handle(req, res, parsedUrl))
         .catch(err => {
