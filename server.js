@@ -5,24 +5,43 @@ const next = require('next');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 
+// Web app starts immediately
 const webApp = next({ dev: false, dir: path.join(__dirname, 'apps/web') });
-const adminApp = next({ dev: false, dir: path.join(__dirname, 'apps/admin') });
-
 const webHandle = webApp.getRequestHandler();
-const adminHandle = adminApp.getRequestHandler();
 
-Promise.all([webApp.prepare(), adminApp.prepare()]).then(() => {
+// Admin app loads lazily on first /admin request
+let adminApp = null;
+let adminHandle = null;
+let adminPreparing = null;
+
+function getAdminHandle() {
+  if (adminHandle) return Promise.resolve(adminHandle);
+  if (!adminPreparing) {
+    adminApp = next({ dev: false, dir: path.join(__dirname, 'apps/admin') });
+    adminHandle = adminApp.getRequestHandler();
+    adminPreparing = adminApp.prepare();
+  }
+  return adminPreparing.then(() => adminHandle);
+}
+
+webApp.prepare().then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
     const pathname = parsedUrl.pathname || '';
 
-    // Route /admin/* to admin app (basePath handles the prefix)
     if (pathname === '/admin' || pathname.startsWith('/admin/')) {
-      adminHandle(req, res, parsedUrl);
+      getAdminHandle()
+        .then(handle => handle(req, res, parsedUrl))
+        .catch(err => {
+          console.error('Admin error:', err);
+          res.statusCode = 500;
+          res.end('Admin unavailable');
+        });
     } else {
       webHandle(req, res, parsedUrl);
     }
   }).listen(port, () => {
+    console.log(`> Ready on port ${port}`);
     console.log(`> Web:   gazimiraz.com`);
     console.log(`> Admin: gazimiraz.com/admin`);
   });
