@@ -22,11 +22,15 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       tls: isTLS ? {} : undefined,
     });
 
-    this.client.on('error', (err) => this.logger.error('Redis error', err));
+    this.client.on('error', (err) => this.logger.warn(`Redis error: ${err.message}`));
     this.client.on('connect', () => this.logger.log('Redis connected'));
     this.client.on('reconnecting', () => this.logger.warn('Redis reconnecting'));
 
-    await this.client.connect();
+    try {
+      await this.client.connect();
+    } catch (err) {
+      this.logger.warn(`Redis unavailable — app will run without cache: ${err.message}`);
+    }
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -34,64 +38,82 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     this.logger.log('Redis disconnected');
   }
 
+  private get connected(): boolean {
+    return this.client?.status === 'ready';
+  }
+
   getClient(): Redis {
     return this.client;
   }
 
   async get(key: string): Promise<string | null> {
+    if (!this.connected) return null;
     return this.client.get(key);
   }
 
   async set(key: string, value: string): Promise<void> {
+    if (!this.connected) return;
     await this.client.set(key, value);
   }
 
   async setEx(key: string, ttlSeconds: number, value: string): Promise<void> {
+    if (!this.connected) return;
     await this.client.setex(key, ttlSeconds, value);
   }
 
   async del(key: string): Promise<void> {
+    if (!this.connected) return;
     await this.client.del(key);
   }
 
   async exists(key: string): Promise<boolean> {
+    if (!this.connected) return false;
     const count = await this.client.exists(key);
     return count > 0;
   }
 
   async hGet(key: string, field: string): Promise<string | null> {
+    if (!this.connected) return null;
     return this.client.hget(key, field);
   }
 
   async hSet(key: string, field: string, value: string): Promise<void> {
+    if (!this.connected) return;
     await this.client.hset(key, field, value);
   }
 
   async hGetAll(key: string): Promise<Record<string, string>> {
+    if (!this.connected) return {};
     return this.client.hgetall(key);
   }
 
   async hDel(key: string, field: string): Promise<void> {
+    if (!this.connected) return;
     await this.client.hdel(key, field);
   }
 
   async incr(key: string): Promise<number> {
+    if (!this.connected) return 0;
     return this.client.incr(key);
   }
 
   async expire(key: string, seconds: number): Promise<void> {
+    if (!this.connected) return;
     await this.client.expire(key, seconds);
   }
 
   async keys(pattern: string): Promise<string[]> {
+    if (!this.connected) return [];
     return this.client.keys(pattern);
   }
 
   async ttl(key: string): Promise<number> {
+    if (!this.connected) return -1;
     return this.client.ttl(key);
   }
 
   async flushPattern(pattern: string): Promise<void> {
+    if (!this.connected) return;
     const matchingKeys = await this.client.keys(pattern);
     if (matchingKeys.length > 0) {
       const pipeline = this.client.pipeline();
@@ -107,12 +129,12 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     ttlSeconds: number,
     factory: () => Promise<T>,
   ): Promise<T> {
+    if (!this.connected) return factory();
     const cached = await this.client.get(key);
     if (cached !== null) {
       try {
         return JSON.parse(cached) as T;
       } catch {
-        // cached value is not JSON, return as-is
         return cached as unknown as T;
       }
     }
@@ -122,6 +144,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async ping(): Promise<string> {
+    if (!this.connected) throw new Error('Redis not connected');
     return this.client.ping();
   }
 
