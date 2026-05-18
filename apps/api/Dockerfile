@@ -22,7 +22,7 @@ RUN echo '{"name":"@shaj/web","version":"1.0.0","private":true}' > apps/web/pack
 RUN echo '{"name":"@shaj/admin","version":"1.0.0","private":true}' > apps/admin/package.json
 RUN echo '{"name":"@shaj/pos","version":"1.0.0","private":true}' > apps/pos/package.json
 
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile --shamefully-hoist
 
 RUN pnpm --filter @shaj/database run generate
 
