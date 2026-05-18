@@ -30,6 +30,15 @@
     "turbo": "^2.0.9",
     "typescript": "^5.5.2"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
+      "sharp",
+      "esbuild"
+    ]
+  },
   "lint-staged": {
     "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
     "*.{json,md,yml,yaml}": ["prettier --write"]
