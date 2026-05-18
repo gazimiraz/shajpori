@@ -1,4 +1,5 @@
 FROM node:20-alpine
+# next upgraded to 14.2.35 in lockfile — clears Railway CVE-2025-55246/67779 scan
 
 # sharp + Prisma need these on musl/Alpine
 RUN apk add --no-cache libc6-compat openssl
