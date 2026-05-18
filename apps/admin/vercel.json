@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && pnpm --filter @shaj/database run generate && pnpm --filter @shaj/admin run build",
+  "buildCommand": "cd ../.. && pnpm --filter @shaj/database run generate && pnpm --filter @shaj/types run build && pnpm --filter @shaj/utils run build && pnpm --filter @shaj/database run build && pnpm --filter @shaj/admin run build",
   "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
   "outputDirectory": ".next",
   "framework": "nextjs"

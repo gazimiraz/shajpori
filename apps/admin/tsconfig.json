@@ -23,7 +23,9 @@
       "@shaj/types": ["../../packages/types/src/index.ts"],
       "@shaj/types/*": ["../../packages/types/src/*"],
       "@shaj/utils": ["../../packages/utils/src/index.ts"],
-      "@shaj/utils/*": ["../../packages/utils/src/*"]
+      "@shaj/utils/*": ["../../packages/utils/src/*"],
+      "@shaj/database": ["../../packages/database/src/index.ts"],
+      "@shaj/database/*": ["../../packages/database/src/*"]
     },
     "plugins": [
       {
