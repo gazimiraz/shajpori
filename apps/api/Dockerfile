@@ -1,24 +1,30 @@
 FROM node:20-alpine
 
+# sharp + Prisma need these on musl/Alpine
+RUN apk add --no-cache libc6-compat openssl
+
 WORKDIR /app
 
-# Install pnpm
 RUN npm install -g pnpm@8.15.4
 
-# Copy workspace files
+# Workspace config + shared packages
 COPY pnpm-workspace.yaml ./
 COPY package.json ./
 COPY pnpm-lock.yaml* ./
 COPY packages/ ./packages/
 COPY apps/api/ ./apps/api/
 
-# Install dependencies
+# Stub out the other workspace apps so pnpm can resolve the workspace
+# without needing their full source trees
+RUN mkdir -p apps/web apps/admin apps/pos
+RUN echo '{"name":"@shaj/web","version":"1.0.0","private":true}' > apps/web/package.json
+RUN echo '{"name":"@shaj/admin","version":"1.0.0","private":true}' > apps/admin/package.json
+RUN echo '{"name":"@shaj/pos","version":"1.0.0","private":true}' > apps/pos/package.json
+
 RUN pnpm install --no-frozen-lockfile
 
-# Generate Prisma client
 RUN pnpm --filter @shaj/database run generate
 
-# Build API
 RUN pnpm --filter @shaj/api run build
 
 EXPOSE 4000
