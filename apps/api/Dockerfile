@@ -26,6 +26,10 @@ RUN pnpm install --no-frozen-lockfile --shamefully-hoist
 
 RUN pnpm --filter @shaj/database run generate
 
+RUN pnpm --filter @shaj/types run build
+RUN pnpm --filter @shaj/utils run build
+RUN pnpm --filter @shaj/database run build
+
 RUN pnpm --filter @shaj/api run build
 
 EXPOSE 4000
