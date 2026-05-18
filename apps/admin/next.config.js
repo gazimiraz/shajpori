@@ -2,7 +2,7 @@
 const nextConfig = {
   basePath: '/admin',
   skipTrailingSlashRedirect: true,
-  transpilePackages: ['@shaj/types', '@shaj/utils'],
+  transpilePackages: ['@shaj/types', '@shaj/utils', '@shaj/database'],
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
   },
@@ -13,14 +13,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'http', hostname: 'localhost' },
     ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/:path*`,
-      },
-    ];
   },
 };
 
