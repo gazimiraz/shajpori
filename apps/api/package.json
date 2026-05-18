@@ -62,6 +62,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@swc/cli": "^0.3.14",
+    "@swc/core": "^1.7.26",
     "@nestjs/cli": "^10.4.2",
     "@nestjs/schematics": "^10.1.4",
     "@nestjs/testing": "^10.3.10",
