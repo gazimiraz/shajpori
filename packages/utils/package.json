@@ -9,6 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@shaj/types": "workspace:*",
     "bcryptjs": "^2.4.3",
     "date-fns": "^3.6.0",
     "nanoid": "^5.0.7",

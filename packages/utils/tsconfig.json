@@ -7,6 +7,10 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@shaj/types": ["../types/src/index.ts"]
+    },
     "strict": false,
     "skipLibCheck": true,
     "esModuleInterop": true
