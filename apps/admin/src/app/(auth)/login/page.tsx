@@ -20,11 +20,21 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 const stats = [
-  { icon: BarChart3, label: 'Revenue', value: '৳2.4M' },
-  { icon: Package,   label: 'Orders',  value: '12.8k' },
-  { icon: Users,     label: 'Customers', value: '4.3k' },
-  { icon: TrendingUp, label: 'Growth',  value: '+32%' },
+  { icon: BarChart3,  label: 'Revenue',   value: '৳2.4M' },
+  { icon: Package,    label: 'Orders',    value: '12.8k' },
+  { icon: Users,      label: 'Customers', value: '4.3k'  },
+  { icon: TrendingUp, label: 'Growth',    value: '+32%'  },
 ];
+
+// hot-pink palette
+const pink = {
+  main:   '#ff2d78',
+  light:  '#ff6fa8',
+  dark:   '#c4005a',
+  glow:   'rgba(255,45,120,0.35)',
+  subtle: 'rgba(255,45,120,0.12)',
+  border: 'rgba(255,45,120,0.3)',
+};
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,22 +58,27 @@ export default function LoginPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #0d0d2b 0%, #0f1d4a 50%, #090919 100%)' }}
+      style={{ background: 'linear-gradient(135deg, #160010 0%, #1a0020 50%, #0d0008 100%)' }}
     >
-      {/* Decorative blobs — inline styles so they always render */}
+      {/* Pink glow blobs */}
       <div
         className="absolute rounded-full pointer-events-none"
-        style={{ top: '-120px', left: '-80px', width: '480px', height: '480px', background: 'radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)', filter: 'blur(60px)' }}
+        style={{ top: '-100px', left: '-80px', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(255,45,120,0.28) 0%, transparent 70%)', filter: 'blur(60px)' }}
       />
       <div
         className="absolute rounded-full pointer-events-none"
-        style={{ bottom: '-80px', right: '-60px', width: '360px', height: '360px', background: 'radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%)', filter: 'blur(60px)' }}
+        style={{ bottom: '-80px', right: '-60px', width: '380px', height: '380px', background: 'radial-gradient(circle, rgba(200,0,80,0.22) 0%, transparent 70%)', filter: 'blur(60px)' }}
       />
+      <div
+        className="absolute rounded-full pointer-events-none"
+        style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(255,45,120,0.08) 0%, transparent 70%)', filter: 'blur(40px)' }}
+      />
+
       {/* Grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(255,45,120,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,45,120,0.05) 1px, transparent 1px)',
           backgroundSize: '48px 48px',
         }}
       />
@@ -77,15 +92,29 @@ export default function LoginPage() {
         {/* Brand header */}
         <div className="text-center mb-8">
           <div
-            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5 shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #2563eb, #4f46e5)', boxShadow: '0 8px 32px rgba(37,99,235,0.4)' }}
+            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5"
+            style={{
+              background: `linear-gradient(135deg, ${pink.main}, ${pink.dark})`,
+              boxShadow: `0 8px 32px ${pink.glow}`,
+            }}
           >
             <ShoppingBag className="w-7 h-7 text-white" />
           </div>
 
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)' }}>
-            <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
-            <span className="text-blue-400 text-xs font-medium tracking-widest uppercase">Admin Control Center</span>
+          <div
+            className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full"
+            style={{ background: pink.subtle, border: `1px solid ${pink.border}` }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full animate-pulse"
+              style={{ background: pink.light }}
+            />
+            <span
+              className="text-xs font-medium tracking-widest uppercase"
+              style={{ color: pink.light }}
+            >
+              Admin Control Center
+            </span>
           </div>
 
           <h1 className="text-4xl font-bold text-white mb-1">Shaj Ecom</h1>
@@ -95,7 +124,11 @@ export default function LoginPage() {
         {/* Card */}
         <div
           className="rounded-2xl shadow-2xl p-8"
-          style={{ background: 'rgba(15,23,42,0.8)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)' }}
+          style={{
+            background: 'rgba(20,5,15,0.85)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,45,120,0.15)',
+          }}
         >
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-white mb-1">Welcome back</h2>
@@ -110,7 +143,10 @@ export default function LoginPage() {
                 {...register('email')}
                 type="email"
                 placeholder="admin@shaj.com"
-                className="h-11 bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500 rounded-xl"
+                className="h-11 bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 rounded-xl"
+                style={{ outline: 'none' }}
+                onFocus={e => (e.currentTarget.style.borderColor = pink.main)}
+                onBlur={e => (e.currentTarget.style.borderColor = '')}
               />
               {errors.email && <p className="text-red-400 text-xs">{errors.email.message}</p>}
             </div>
@@ -119,7 +155,11 @@ export default function LoginPage() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <Label className="text-slate-300 text-sm font-medium">Password</Label>
-                <a href="/auth/forgot-password" className="text-xs text-blue-400 hover:text-blue-300">
+                <a
+                  href="/auth/forgot-password"
+                  className="text-xs hover:underline"
+                  style={{ color: pink.light }}
+                >
                   Forgot password?
                 </a>
               </div>
@@ -128,7 +168,10 @@ export default function LoginPage() {
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
-                  className="h-11 bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500 rounded-xl pr-11"
+                  className="h-11 bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 rounded-xl pr-11"
+                  style={{ outline: 'none' }}
+                  onFocus={e => (e.currentTarget.style.borderColor = pink.main)}
+                  onBlur={e => (e.currentTarget.style.borderColor = '')}
                 />
                 <button
                   type="button"
@@ -145,10 +188,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full h-11 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-opacity duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{
-                background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
-                boxShadow: '0 4px 20px rgba(37,99,235,0.35)',
+                background: `linear-gradient(135deg, ${pink.main}, ${pink.dark})`,
+                boxShadow: `0 4px 20px ${pink.glow}`,
               }}
             >
               {isLoading ? (
@@ -162,11 +205,11 @@ export default function LoginPage() {
           {/* Stats row */}
           <div
             className="grid grid-cols-4 gap-3 mt-8 pt-6"
-            style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+            style={{ borderTop: '1px solid rgba(255,45,120,0.12)' }}
           >
             {stats.map(({ icon: Icon, label, value }) => (
               <div key={label} className="text-center">
-                <Icon className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+                <Icon className="w-4 h-4 mx-auto mb-1" style={{ color: pink.light }} />
                 <p className="text-white font-bold text-sm">{value}</p>
                 <p className="text-slate-500 text-xs">{label}</p>
               </div>
